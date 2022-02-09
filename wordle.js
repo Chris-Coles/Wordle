@@ -9,9 +9,6 @@ var col = 0; //current letter of guess
 var gameOver = false;
 var word = 'GEOFF';
 
-// words = ['EARTH','PANTS']
-// word = words[0]
-
 window.onload = function (){
     initialize();
 }
@@ -32,6 +29,9 @@ function initialize() {
      }
  }
 
+
+
+ /*handles typing */
  document.addEventListener("keyup", (e) => {
     if(gameOver) return;
     // alert(e.code[0]); K
@@ -59,21 +59,65 @@ function initialize() {
 
     }
     //check if right
-    else if (e.code == "Enter") {
+    else if (col == 5 && e.code == "Enter") {
         update();
         row += 1;
         col = 0;
+    }
+    else {
+        return;
     }
 
     //check if gameover
     if(!gameOver && row == height) {
         gameOver = true;
-        document.getElementById("answer").innerText = word;
+        document.getElementById("answer").innerText = ("The Answer was " + word);
     }
- })
+ }
+  )
 
+/* Using the buttons */
+ const keys = document.querySelectorAll(".keyboard-row button");
+  for (let i = 0; i < keys.length; i++) {
+    keys[i].onclick = ({ target }) => {
+      const letter = target.getAttribute("data-key").toUpperCase();;
+      if("keyA" <= "key" + letter && "key" + letter <= "keyZ"){
+
+        if(col < width){
+            let currTile = document.getElementById(row.toString() + "-" + col.toString());
+            if(currTile.innerText == "") {
+                currTile.innerText = letter;
+                col += 1;
+
+            }
+        }
+    }
+      else if (col == 5 && letter === "ENTER") {
+        update();
+        row += 1;
+        col = 0;
+        return;
+      }
+      else if (letter === "DEL") {
+        if (0 < col && col <= width){
+            col -= 1;
+            let currTile = document.getElementById(row.toString() + "-" + col.toString());
+            currTile.innerText = "";           
+        }
+        return;
+      }
+      else {return;}
+
+      if(!gameOver && row == height) {
+        gameOver = true;
+        document.getElementById("answer").innerText = ("The Answer was " + word);
+    }
+    }
+};
 
 }
+
+
 
 function update() {
     let correct = 0;
